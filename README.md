@@ -42,8 +42,11 @@ Now, if the request ends is `http://localhost/afro/hello/jbrooksuk.json` the out
 
 # Author
 Blog: [james.brooks.so](http://james.brooks.so)
+
 Twitter: [@jbrooksuk](http://twitter.com/jbrooksuk)
+
 App.net: [@jbrooksuk](http://alpha.app.net/jbrooksuk)
+
 GitHub: [@jbrooksuk](http://github.com/jbrooksuk)
 
 # Copyright
