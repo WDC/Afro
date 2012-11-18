@@ -14,38 +14,46 @@ All of them take the same parameters but will only activate on the given request
 
 ## Handling a simple `GET` request with no parameters.
 
-    get('/', function($Afro) {
-        echo "HELLO";
-    });
+```php
+get('/', function($Afro) {
+    echo "HELLO";
+});
+```
 
 ## Handling a `GET` request for getting a users name.
 
-	get('/hello/(.*?)', function($Afro) {
-		echo 'Hello ' . $Afro->param(2) . ', I hope today is full of Unicorns.'
-	});
+```php
+get('/hello/(.*?)', function($Afro) {
+	echo 'Hello ' . $Afro->param(2) . ', I hope today is full of Unicorns.'
+});
+```
 
 ## Handling a `GET` request for getting a users name in different formats.
 One of the beautiful things about Afro is that you can use the same request handler, but output different data depending on the format the request is called as.
 
 Let's take the example above and use add a JSON output.
 
-	get('/hello/(.*?)', function($Afro) {
-		$Afro->format('json', function($Afro) {
-            echo json_encode(array('name', $Afro->param(2)));
-        });
+```
+get('/hello/(.*?)', function($Afro) {
+	$Afro->format('json', function($Afro) {
+        echo json_encode(array('name', $Afro->param(2)));
+    });
 
-        if(!$Afro->format)
-			echo 'Hello ' . $Afro->param(2) . ', I hope today is full of Unicorns.'
-	});
+    if(!$Afro->format)
+		echo 'Hello ' . $Afro->param(2) . ', I hope today is full of Unicorns.'
+});
+```
 
 Now, if the request ends is `http://localhost/afro/hello/jbrooksuk.json` the output will be returned as a valid JSON string.
 
 ## Handling a simple POST request with a username.
 
-	post('/connect/(.*?)', function($Afro) {
-        if(!$Afro->format)
-        	// Insert the user into a database? The format will always be the same in whichever function you use.
-	});
+```php
+post('/connect/(.*?)', function($Afro) {
+    if(!$Afro->format)
+    	// Insert the user into a database? The format will always be the same in whichever function you use.
+});
+```
 
 # Payload
 Afro is also aware of requests which aren't handled by one of the five *router* functions. If you're request is in the format of `?hello=James&day=Sunday` for example, then Afro will create an array of this in the `payload` array for you.
