@@ -33,7 +33,7 @@ One of the beautiful things about Afro is that you can use the same request hand
 
 Let's take the example above and use add a JSON output.
 
-```
+```php
 get('/hello/(.*?)', function($Afro) {
 	$Afro->format('json', function($Afro) {
         echo json_encode(array('name', $Afro->param(2)));
