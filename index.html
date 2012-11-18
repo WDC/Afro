@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Afro by jbrooksuk</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Afro</h1>
+          <h2>PHP Request Routing like Sinatra for Ruby</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/jbrooksuk/Afro/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/jbrooksuk/Afro/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/jbrooksuk/Afro" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>Afro</h1>
+
+<p>A PHP class for handling URL requests, similar to Ruby's <a href="http://www.sinatrarb.com/">Sinatra gem</a>.</p>
+
+<h1>Working with Afro</h1>
+
+<p>Afro includes five procedural functions which allow you to handle requests with:</p>
+
+<ul>
+<li><code>get</code></li>
+<li><code>post</code></li>
+<li><code>put</code></li>
+<li><code>delete</code></li>
+<li><code>ajax</code></li>
+</ul><p>All of them take the same parameters but will only activate on the given request types.</p>
+
+<h2>Handling a simple <code>GET</code> request with no parameters.</h2>
+
+<div class="highlight"><pre><span class="nx">get</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$Afro</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">"HELLO"</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>Handling a <code>GET</code> request for getting a users name.</h2>
+
+<div class="highlight"><pre><span class="nx">get</span><span class="p">(</span><span class="s1">'/hello/(.*?)'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$Afro</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s1">'Hello '</span> <span class="o">.</span> <span class="nv">$Afro</span><span class="o">-&gt;</span><span class="na">param</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">.</span> <span class="s1">', I hope today is full of Unicorns.'</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>Handling a <code>GET</code> request for getting a users name in different formats.</h2>
+
+<p>One of the beautiful things about Afro is that you can use the same request handler, but output different data depending on the format the request is called as.</p>
+
+<p>Let's take the example above and use add a JSON output.</p>
+
+<div class="highlight"><pre><span class="nx">get</span><span class="p">(</span><span class="s1">'/hello/(.*?)'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$Afro</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$Afro</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">(</span><span class="s1">'json'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$Afro</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="nb">json_encode</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="nv">$Afro</span><span class="o">-&gt;</span><span class="na">param</span><span class="p">(</span><span class="mi">2</span><span class="p">)));</span>
+    <span class="p">});</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$Afro</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">)</span>
+        <span class="k">echo</span> <span class="s1">'Hello '</span> <span class="o">.</span> <span class="nv">$Afro</span><span class="o">-&gt;</span><span class="na">param</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">.</span> <span class="s1">', I hope today is full of Unicorns.'</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Now, if the request ends is <code>http://localhost/afro/hello/jbrooksuk.json</code> the output will be returned as a valid JSON string.</p>
+
+<h2> Handling a simple POST request with a username.</h2>
+
+<div class="highlight"><pre><span class="nx">post</span><span class="p">(</span><span class="s1">'/connect/(.*?)'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$Afro</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$Afro</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">)</span>
+        <span class="c1">// Insert the user into a database? The format will always be the same in whichever function you use.</span>
+<span class="p">});</span>
+</pre></div>
+
+<h1>Payload</h1>
+
+<p>Afro is also aware of requests which aren't handled by one of the five <em>router</em> functions. If you're request is in the format of <code>?hello=James&amp;day=Sunday</code> for example, then Afro will create an array of this in the <code>payload</code> array for you.</p>
+
+<p>This can be accessed with <code>$Afro-&gt;payload</code> just in case you need it.</p>
+
+<h1>Exposing Afro</h1>
+
+<p>You can expose any part of Afro by taking a look at the instance created by the class on the <code>$Afro</code> variable. Calling <code>var_dump($Afro-&gt;getInstance())</code> will display the current pages requested data along with several other useful elements.</p>
+
+<ul>
+<li>
+<code>URI</code> the entire URI being requested.</li>
+<li>
+<code>params</code> an array of params, accessible with the <code>$Instance-&gt;param($index)</code> function.</li>
+<li>
+<code>method</code> a string representation of the requested method used.</li>
+<li>
+<code>format</code> if a format such as <code>.json</code> or <code>.csv</code> is appended to the end of the URI this will be populated.</li>
+<li>
+<code>paramCount</code> the amount of parameters being requested in the <code>params</code> array above.</li>
+<li>
+<code>payload</code> as explained in the section above.</li>
+</ul><h1>Author</h1>
+
+<ul>
+<li>Blog: <a href="http://james.brooks.so">james.brooks.so</a>
+</li>
+<li>Twitter: <a href="http://twitter.com/jbrooksuk">@jbrooksuk</a>
+</li>
+<li>App.net: <a href="http://alpha.app.net/jbrooksuk">@jbrooksuk</a>
+</li>
+<li>GitHub: <a href="http://github.com/jbrooksuk">@jbrooksuk</a>
+</li>
+</ul><h1>Copyright</h1>
+
+<p>Copyright 2012 James Brooks</p>
+
+<p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:</p>
+
+<p><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+
+<p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
+        </section>
+
+        <footer>
+          Afro is maintained by <a href="https://github.com/jbrooksuk">jbrooksuk</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-36421853-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+      </div>
+    </div>
+  </body>
+</html>
