@@ -1,0 +1,40 @@
+server
+{
+    # domain to listen on
+    server_name your.server.com;
+
+    # access log path
+    access_log /var/log/nginx/access.log;
+
+    # error log path
+    error_log /var/log/nginx/error.log;
+
+    # document root
+    root /usr/share/nginx/html;
+
+    # index file to look for. This shouldn't change.
+    index index.php;
+    
+    # rewrite requests for non-static content through the index.php file
+    if (!-e $request_filename)
+    {
+        rewrite ^/(.*)$ /index.php?/$1 last;
+        break;
+    }
+
+    # Use PHP-FPM for all PHP file request. This may already be setup, or you may 
+    # have to change the fastcgi_param directive to meet your server's setup.
+    location ~ \.php$
+    {
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    # deny access to apache .htaccess files
+    location ~ /\.ht
+    {
+        deny all;
+    }
+}
