@@ -128,6 +128,38 @@
 				return $callback($Afro);
 			else return FALSE;
 		}
+		
+		public function response($data, $for = NULL, $echo = TRUE) {
+			$Afro = static::getInstance();
+			if (is_null($for) && !empty($Afro->format)) {
+				$for = $Afro->format;
+			}
+			$for = strtolower($for);
+			switch ($for) {
+				case 'json':
+					if ($echo) {
+						echo json_encode($data);
+					}
+					else {
+						return json_encode($data);
+					}
+					break;
+				case 'csv':
+					$string = '';
+					foreach ($data as $line) {
+						$string .= implode(',', $line) . "\n";
+					}
+					if ($echo) {
+						echo $string;
+					}
+					else {
+						return $string;
+					}
+					break;
+			
+			}
+		}
+
 	}
 
 	$Afro = Afro::getInstance();
